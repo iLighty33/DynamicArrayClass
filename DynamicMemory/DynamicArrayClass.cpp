@@ -6,6 +6,8 @@
 using namespace std;
 
 class DynamicArray {
+	int* numbers;
+	int sizeOfArray;
 public:
 	
 	// A.Constructor
@@ -109,7 +111,33 @@ public:
 	}
 
 	// W. Swaps the contents
+	
+
+
 	// X. Operator==
+
+	friend bool operator==(DynamicArray &arrInt, DynamicArray &arrInt2);
+	friend bool operator==(DynamicArray & arrInt, DynamicArray &arrInt2)
+	{
+		if (arrInt.sizeOfArray != arrInt2.sizeOfArray) //сравниваем размеры массивов объектов
+		{
+			cout << "В массивах разное количество элементов\n";
+			return 0;
+		}
+		else //проверяем равны ли данные в в ячейках массивов
+		{
+			for (int i = 0; i < arrInt.sizeOfArray; i++)
+			{
+				if (arrInt.numbers[i] != arrInt2.numbers[i])
+				{
+					cout << "Значения массивов не равны\n";
+					return 0;
+				}
+			}
+		}
+		return 1;
+	}
+
 
 private:
 	int* data_;
