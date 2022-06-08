@@ -66,8 +66,20 @@ public:
 
 	// L. Reserve
 	void reserve(int newCapacity) {
-		if (newCapacity > capacity_)
-			;
+		size_ = this->size_;
+		int* tmp = new int[size_];
+		for (int i = 0; i < size_; i++) {
+			tmp[i] = data_[i];
+		}
+		delete[] data_;
+		this->capacity_ = size_ + newCapacity;
+		this->size_ = this->capacity_;
+		data_ = new int[capacity_] {};
+		for (int i = 0; i < capacity_ - newCapacity; i++) {
+			data_[i] = tmp[i];
+		}
+		delete[] tmp;
+		
 	}
 	
 	// M. Capacity
@@ -77,6 +89,19 @@ public:
 	}
 
 	// N. Shrink_to_fit
+	int* tmp = new int[size_];
+	
+	for (int i = 0; i < size_; i++) {
+		tmp[i] = data_[i];
+	}
+	capacity_ = size_;
+	delete[]data_;
+	data_ = new int[capacity_];
+	for (int i = 0; i < capacity_; i++) {
+		data_[i] = tmp[i];
+	}
+	delete[] tmp;
+
 	// O. Clear
 	void clear() {
 		delete[] data_;
@@ -84,7 +109,47 @@ public:
 	}
 
 	// P. Insert
+	void(int index, int value, int count) {
+		if (capacity_ < size_ + count)
+			this->reserve(count);
+		size_ += count;
+		int* tmp = new int[size];
+		for (int i = 0; i < index; i++) {
+			tmp[i] = data_[i];
+		}
+		for (int i = index; i < index + count; i++) {
+			tmp[i] = value;
+		}
+		for (int i = index + count; i < size_; i++) {
+			tmp[i] = data_[i];
+		}
+		delete[]data_;
+		data_ = new int[capacity_];
+		for (int i = 0; i < size_; i++) {
+			data_[i] = tmp[i];
+		}
+		delete[]tmp;
+	}
+
 	// Q. Erase
+	void erase(int begin, int end) {
+		int count = 0;
+		int* tmp = new int[size];
+		for (int i = 0; i < size; i++) {
+			tmp[i] = data_[i];
+		}
+		delete[]data;
+		data = new int[size - (end - begin)];
+		for (int i = 0; i < size; i++) {
+			if (i >= begin && i <= end) {
+				count++;
+				continue;
+			}
+			data[i - count] = tmp[i];
+		}
+		size -= (end - bgin + 1);
+	}
+	
 	// R. Push_back
 	void push_back(int value) {
 		int* tmp = new int[size_ + 1];
@@ -101,7 +166,38 @@ public:
 	}
 
 	// T. Pop_back
+	int* tmp = new int[size_];
+	for (int i = 0; i < size_; i++) {
+		tmp[i] = data_[i];
+	}
+	delete[]data;
+	size_ -= 1;
+	data_ = new int[size_] {};
+	for (int i = 0; i < size_; i++) {
+		data_[i] = tmp[i];
+	}
+
 	// U. Resize
+	void resize(int newSize) {
+		if (newSize > capacity_)
+			this->reverse(newSize - capacity_);
+		else
+		{
+			int* tmp = new int[size];
+			for (int i = 0; i < size_; i++) {
+				tmp[i] = data_[i];
+			}
+			delete[]data_;
+			capacity_ = newSize;
+			data_ = new int[capacity_];
+			if (size_ > capacity_)
+				size_ = capacity_;
+			for (int i = 0; i < size; i++) {
+				data_[i] = tmp[i];
+			}
+		}
+	}
+
 	// V. Swap
 	void swap(DynamicArray& other, DynamicArray& other2) {
 		DynamicArray tmp;
