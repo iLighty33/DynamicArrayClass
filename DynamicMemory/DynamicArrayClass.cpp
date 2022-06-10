@@ -178,65 +178,65 @@ public:
 		data_ = new int[size_] {};
 		for (int i = 0; i < size_; i++) {
 			data_[i] = tmp[i];
-	}
-
-	// U. Resize
-	void resize(int newSize) {
-		if (newSize > capacity_)
-			this->reverse(newSize - capacity_);
-		else
-		{
-			int* tmp = new int[size];
-			for (int i = 0; i < size_; i++) {
-				tmp[i] = data_[i];
-			}
-			delete[]data_;
-			capacity_ = newSize;
-			data_ = new int[capacity_];
-			if (size_ > capacity_)
-				size_ = capacity_;
-			for (int i = 0; i < size; i++) {
-				data_[i] = tmp[i];
-			}
 		}
-	}
 
-	// V. Swap
-	void swap(DynamicArray& other, DynamicArray& other2) {
-		DynamicArray tmp;
-		tmp = other;
-		other = other2;
-		other2 = tmp;
-	}
-
-	// W. Swaps the contents
-	
-
-
-	// X. Operator==
-
-	friend bool operator==(DynamicArray &arrInt, DynamicArray &arrInt2);
-	friend bool operator==(DynamicArray & arrInt, DynamicArray &arrInt2)
-	{
-		if (arrInt.sizeOfArray != arrInt2.sizeOfArray) //сравниваем размеры массивов объектов
-		{
-			cout << "В массивах разное количество элементов\n";
-			return 0;
-		}
-		else //проверяем равны ли данные в в ячейках массивов
-		{
-			for (int i = 0; i < arrInt.sizeOfArray; i++)
+		// U. Resize
+		void resize(int newSize) {
+			if (newSize > capacity_)
+				this->reverse(newSize - capacity_);
+			else
 			{
-				if (arrInt.numbers[i] != arrInt2.numbers[i])
-				{
-					cout << "Значения массивов не равны\n";
-					return 0;
+				int* tmp = new int[size];
+				for (int i = 0; i < size_; i++) {
+					tmp[i] = data_[i];
+				}
+				delete[]data_;
+				capacity_ = newSize;
+				data_ = new int[capacity_];
+				if (size_ > capacity_)
+					size_ = capacity_;
+				for (int i = 0; i < size; i++) {
+					data_[i] = tmp[i];
 				}
 			}
 		}
-		return 1;
-	}
 
+		// V. Swap
+		void swap(DynamicArray & other, DynamicArray & other2) {
+			DynamicArray tmp;
+			tmp = other;
+			other = other2;
+			other2 = tmp;
+		}
+
+		// W. Swaps the contents
+
+
+
+		// X. Operator==
+
+		friend bool operator==(DynamicArray & arrInt, DynamicArray & arrInt2);
+		friend bool operator==(DynamicArray & arrInt, DynamicArray & arrInt2)
+		{
+			if (arrInt.sizeOfArray != arrInt2.sizeOfArray) //сравниваем размеры массивов объектов
+			{
+				cout << "В массивах разное количество элементов\n";
+				return 0;
+			}
+			else //проверяем равны ли данные в в ячейках массивов
+			{
+				for (int i = 0; i < arrInt.sizeOfArray; i++)
+				{
+					if (arrInt.numbers[i] != arrInt2.numbers[i])
+					{
+						cout << "Значения массивов не равны\n";
+						return 0;
+					}
+				}
+			}
+			return 1;
+		}
+	}
 
 private:
 	int* data_;
