@@ -89,18 +89,20 @@ public:
 	}
 
 	// N. Shrink_to_fit
-	int* tmp = new int[size_];
-	
-	for (int i = 0; i < size_; i++) {
-		tmp[i] = data_[i];
+	void shrinkToFit() {
+		int* tmp = new int[size_];
+
+		for (int i = 0; i < size_; i++) {
+			tmp[i] = data_[i];
+		}
+		capacity_ = size_;
+		delete[]data_;
+		data_ = new int[capacity_];
+		for (int i = 0; i < capacity_; i++) {
+			data_[i] = tmp[i];
+		}
+		delete[] tmp;
 	}
-	capacity_ = size_;
-	delete[]data_;
-	data_ = new int[capacity_];
-	for (int i = 0; i < capacity_; i++) {
-		data_[i] = tmp[i];
-	}
-	delete[] tmp;
 
 	// O. Clear
 	void clear() {
@@ -109,11 +111,11 @@ public:
 	}
 
 	// P. Insert
-	void(int index, int value, int count) {
+	void insert(int index, int value, int count) {
 		if (capacity_ < size_ + count)
 			this->reserve(count);
 		size_ += count;
-		int* tmp = new int[size];
+		int* tmp = new int[size_];
 		for (int i = 0; i < index; i++) {
 			tmp[i] = data_[i];
 		}
@@ -134,24 +136,24 @@ public:
 	// Q. Erase
 	void erase(int begin, int end) {
 		int count = 0;
-		int* tmp = new int[size];
-		for (int i = 0; i < size; i++) {
+		int* tmp = new int[size_];
+		for (int i = 0; i < size_; i++) {
 			tmp[i] = data_[i];
 		}
-		delete[]data;
-		data = new int[size - (end - begin)];
-		for (int i = 0; i < size; i++) {
+		delete[]data_;
+		data_ = new int[size_ - (end - begin)];
+		for (int i = 0; i < size_; i++) {
 			if (i >= begin && i <= end) {
 				count++;
 				continue;
 			}
-			data[i - count] = tmp[i];
+			data_[i - count] = tmp[i];
 		}
-		size -= (end - bgin + 1);
+		size_ -= (end - begin + 1);
 	}
 	
 	// R. Push_back
-	void push_back(int value) {
+	void pushBack(int value) {
 		int* tmp = new int[size_ + 1];
 
 		for (int i = 0; i < size_; i++) {
@@ -166,15 +168,16 @@ public:
 	}
 
 	// T. Pop_back
-	int* tmp = new int[size_];
-	for (int i = 0; i < size_; i++) {
-		tmp[i] = data_[i];
-	}
-	delete[]data;
-	size_ -= 1;
-	data_ = new int[size_] {};
-	for (int i = 0; i < size_; i++) {
-		data_[i] = tmp[i];
+	void popBack() {
+		int* tmp = new int[size_];
+		for (int i = 0; i < size_; i++) {
+			tmp[i] = data_[i];
+		}
+		delete[]data_;
+		size_ -= 1;
+		data_ = new int[size_] {};
+		for (int i = 0; i < size_; i++) {
+			data_[i] = tmp[i];
 	}
 
 	// U. Resize
@@ -239,6 +242,130 @@ private:
 	int* data_;
 	int size_;
 	int capacity_;
+};
+
+class iterator {
+public:
+	int* operator->()const;
+	int* operator->()const {
+		return place_;
+	}
+
+	int& operator*()const;
+	int& operator*()const {
+		return *place_;
+	};
+
+	operator int* ()const;
+	operator int* ()const {
+		return place_;
+	}
+
+	iterator& operator+(int i)const;
+	iterator& operator+(int i)const {
+		iterator result(*this);
+		result.place_ += i;
+		return result;
+	}
+
+	iterator& operator+=(int i);
+	iterator& operator+=(int i) {
+		place_ += i;
+		return *this;
+	}
+
+	iterator& operator-(int i)const;
+	iterator& operator-(int i)const {
+		iterator result(*this);
+		result.place_ -= i;
+		return result;
+	}
+
+	iterator& operator-=(int i);
+	iterator& operator-=(int i) {
+		place_ -= i;
+		return *this;
+	}
+
+	iterator& operator--();
+	iterator& operator--() {
+		place_ -= 1;
+		return *this;
+	}
+
+	iterator& operator--(int);
+	iterator& operator--(int) {
+		iterator tmp{ *this };
+		place_ -= 1;
+		return tmp;
+	}
+
+	iterator& operator++();
+	iterator& operator++() {
+		place_ += 1;
+		return *this;
+	}
+
+	iterator& operator++(int);
+	iterator& operator++(int) {
+		iterator tmp{ *this };
+		place_ += 1;
+		return tmp;
+	}
+
+	operator bool()const;
+	operator bool()const {
+		return static_cast<bool>(place_);
+	}
+
+	bool operator==(const iterator&& other)const;
+	bool operator==(const iterator&& other)const {
+		return place_ == other.place_;
+	}
+
+	bool operator!=(const iterator&& other)const;
+	bool operator!=(const iterator&& other)const {
+		return place_ != other.place_;
+	}
+
+	bool operator<(const iterator&& other)const;
+	bool operator<(const iterator&& other)const {
+		return place_ < other.place_;
+	}
+
+	bool operator<=(const iterator&& other)const;
+	bool operator<=(const iterator&& other)const {
+		return place_ <= other.place_;
+	}
+
+	bool operator>(const iterator&& other)const;
+	bool operator>(const iterator&& other)const {
+		return place_ > other.place_;
+	}
+
+	bool operator>=(const iterator&& other)const;
+	bool operator>=(const iterator&& other)const {
+		return place_ >= other.place_;
+	}
+
+	int& operator[](int i)const;
+	const DynamicArray const* from()const {
+		return &collection_;
+	}
+	int& operator[](int i)const {
+		return place_[i];
+	}
+
+
+private:
+	iterator() = delete;
+	iterator(const DynamicArray&& position, int* place) :collection_(position), place_(place) {}
+	friend class MyDinArr;
+	const DynamicArray& collection_;
+	int* place_;
+	int size_{ 0 };
+	int capacity_{ 0 };
+	int* data_ = nullptr;
 };
 
 int main() {
