@@ -360,7 +360,7 @@ public:
 private:
 	iterator() = delete;
 	iterator(const DynamicArray&& position, int* place) :collection_(position), place_(place) {}
-	friend class MyDinArr;
+	friend class DynamicArray;
 	const DynamicArray& collection_;
 	int* place_;
 	int size_{ 0 };
